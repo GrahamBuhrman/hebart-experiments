@@ -11,7 +11,7 @@ library(ggplot2)
 library(tidymodels)
 library(tidyverse)
 library(hebartBase)
-#library(firatheme)
+library(firatheme)
 library(lme4)
 
 # Dataset split  ------------------------------------
@@ -159,6 +159,8 @@ rmse <- function(x, y){
   
   return(sqrt(mean((x - y )^2))) 
 }
+
+
 # HEBART Modelling -------------------------------------------
 hebart_step <- data_split |> 
   dplyr::mutate(
