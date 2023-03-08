@@ -11,7 +11,7 @@ library(ggplot2)
 library(tidymodels)
 library(tidyverse)
 library(hebartBase)
-library(firatheme)
+#library(firatheme)
 library(lme4)
 
 # Dataset split  ------------------------------------
@@ -76,7 +76,9 @@ data_split <- rsample::vfold_cv(df, v = 10) |>
 
 # Modelling definitions   ----------------------------------------
 fit_hebart <- function(train){
+  
   num_trees   <- 10
+  
   hb_model <- hebart(formula = y ~ X1 + X2 + X3,
                      data = train,
                      group_variable = "group", 
@@ -102,6 +104,7 @@ fit_hebart <- function(train){
 }
 
 fit_bart <- function(train, test){
+  
   bart_0 <-  dbarts::bart2(y ~ X1 + X2 + X3, 
                            data = train,
                            test = test, 
@@ -111,36 +114,50 @@ fit_bart <- function(train, test){
 }
 
 fit_lme <- function(train){
-  lm3_m0_normal  <- lmer(y ~ X1 + X2 + X3  + (1 |group), data = train)
-  lm3_m0_normal
+  
+  lm3_m0_normal <- lmer(y ~ X1 + X2 + X3  + (1 |group), data = train)
+  
+  return(lm3_m0_normal)
 }
 
 predictions <- function(test, model, type, type_bart = "test"){
+  
   if(type == "hebart"){
+    
     pred <-  predict_hebart(newX = test, new_groups = test$group,
-                            hebart_posterior  = model, type = "mean")
+                            hebart_posterior = model, type = "mean")
     
   } else if(type == "bart"){
+    
     if(type_bart == "test"){
+      
       pred <- model$yhat.test.mean
-    } else{
+      
+    } else {
+      
       pred <- model$yhat.train.mean  
     }
     
   } else if(type == "lme"){
+    
     #pred <- predict(model, test, re.form=NA)
+    
     pred <- predict(model, test)
   }
   
   df <- data.frame(pred = pred, real = test$y, group = test$group,
                    x = test$X1)
   names(df) <- paste0(names(df), "_", type)
+  
   return(df)
+  
 }
 
 
 rmse <- function(x, y){
+  
   sqrt(mean((x - y )^2)) 
+  
 }
 # HEBART Modelling -------------------------------------------
 hebart_step <- data_split |> 
