@@ -101,6 +101,8 @@ fit_hebart <- function(train){
                                  sigma_phi_sd = 0.5)
   )
   
+  return(hb_model)
+  
 }
 
 fit_bart <- function(train, test){
@@ -110,7 +112,7 @@ fit_bart <- function(train, test){
                            test = test, 
                            keepTrees = TRUE)
   
-  bart_0
+  return(bart_0)
 }
 
 fit_lme <- function(train){
@@ -150,14 +152,12 @@ predictions <- function(test, model, type, type_bart = "test"){
   names(df) <- paste0(names(df), "_", type)
   
   return(df)
-  
 }
 
 
 rmse <- function(x, y){
   
-  sqrt(mean((x - y )^2)) 
-  
+  return(sqrt(mean((x - y )^2))) 
 }
 # HEBART Modelling -------------------------------------------
 hebart_step <- data_split |> 
